@@ -35,7 +35,7 @@ export default function App() {
   const [period, setPeriod] = useState('Maand');
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f9fafb' }}>
       <style>{shimmerStyle}</style>
       <Sidebar />
 
@@ -110,10 +110,10 @@ export default function App() {
         <main
           style={{
             flex: 1,
-            padding: '28px 32px',
+            padding: '24px 32px 32px',
             display: 'flex',
             flexDirection: 'column',
-            gap: 20,
+            gap: 16,
           }}
         >
           {isLoading ? (

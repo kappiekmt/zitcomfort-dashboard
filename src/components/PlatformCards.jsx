@@ -1,87 +1,57 @@
 function formatEuro(value) {
   return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
+    style: 'currency', currency: 'EUR',
+    minimumFractionDigits: 0, maximumFractionDigits: 2,
   }).format(value);
 }
 
 function formatNumber(value, decimals = 0) {
   return new Intl.NumberFormat('nl-NL', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals, maximumFractionDigits: decimals,
   }).format(value);
 }
 
-function MetricRow({ label, value }) {
+function MetricRow({ label, value, last }) {
   return (
-    <div className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--color-border)' }}>
-      <span style={{ fontSize: 12, color: 'var(--color-muted)', fontWeight: 500 }}>{label}</span>
-      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-navy)', fontVariantNumeric: 'tabular-nums' }}>
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '10px 0',
+      borderBottom: last ? 'none' : '1px solid #f3f4f6',
+    }}>
+      <span style={{ fontSize: 13, color: '#6b7280' }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: '#111827', fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </span>
     </div>
   );
 }
 
-function PlatformCard({ name, dotColor, metrics, badge, badgeStyle, cardStyle, delay }) {
+function PlatformCard({ name, dotColor, metrics, badge, badgeStyle, delay }) {
   return (
     <div
-      className="animate-in"
-      style={{
-        background: 'var(--color-card)',
-        borderRadius: 12,
-        padding: '20px 22px',
-        boxShadow: 'var(--shadow-card)',
-        border: '1px solid var(--color-border)',
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-        animationDelay: `${delay}ms`,
-        ...cardStyle,
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-card-hover)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-card)';
-      }}
+      className="card animate-in"
+      style={{ padding: '20px 22px', animationDelay: `${delay}ms` }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <span
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              background: dotColor,
-              flexShrink: 0,
-              display: 'inline-block',
-            }}
-          />
-          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color-navy)' }}>
-            {name}
-          </span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: dotColor, display: 'inline-block', flexShrink: 0,
+          }} />
+          <span style={{ fontWeight: 600, fontSize: 14, color: '#111827' }}>{name}</span>
         </div>
-        <span
-          style={{
-            padding: '3px 10px',
-            borderRadius: 20,
-            fontSize: 11,
-            fontWeight: 600,
-            ...badgeStyle,
-          }}
-        >
+        <span style={{
+          padding: '3px 10px', borderRadius: 20,
+          fontSize: 11, fontWeight: 600,
+          ...badgeStyle,
+        }}>
           {badge}
         </span>
       </div>
 
-      {/* Metrics */}
       <div>
-        {metrics.map((m) => (
-          <MetricRow key={m.label} label={m.label} value={m.value} />
+        {metrics.map((m, i) => (
+          <MetricRow key={m.label} label={m.label} value={m.value} last={i === metrics.length - 1} />
         ))}
       </div>
     </div>
@@ -93,48 +63,37 @@ export default function PlatformCards({ data }) {
   const { meta, googleAds, analytics } = data;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
       <PlatformCard
-        name="Meta Ads"
-        dotColor="#1877f2"
-        delay={200}
+        name="Meta Ads" dotColor="#1877f2" delay={160}
         badge="Beste CPA 🏆"
-        badgeStyle={{ background: 'rgba(240,165,0,0.12)', color: 'var(--color-gold)' }}
+        badgeStyle={{ background: '#fef3c7', color: '#d97706' }}
         metrics={[
-          { label: 'Uitgaven', value: formatEuro(meta.spend) },
+          { label: 'Uitgaven',   value: formatEuro(meta.spend) },
           { label: 'Conversies', value: formatNumber(meta.conversions) },
-          { label: 'CPA', value: formatEuro(meta.cpa) },
-          { label: 'CTR', value: `${formatNumber(meta.ctr, 2)}%` },
+          { label: 'CPA',        value: formatEuro(meta.cpa) },
+          { label: 'CTR',        value: `${formatNumber(meta.ctr, 2)}%` },
         ]}
       />
       <PlatformCard
-        name="Google Ads"
-        dotColor="#fbbc04"
-        delay={300}
+        name="Google Ads" dotColor="#fbbc04" delay={240}
         badge="Hoogste bereik"
-        badgeStyle={{ background: 'rgba(26,31,75,0.07)', color: 'var(--color-navy)' }}
+        badgeStyle={{ background: '#f3f4f6', color: '#374151' }}
         metrics={[
-          { label: 'Uitgaven', value: formatEuro(googleAds.spend) },
+          { label: 'Uitgaven',   value: formatEuro(googleAds.spend) },
           { label: 'Conversies', value: formatNumber(googleAds.conversions) },
-          { label: 'CPA', value: formatEuro(googleAds.cpa) },
-          { label: 'CTR', value: `${formatNumber(googleAds.ctr, 2)}%` },
+          { label: 'CPA',        value: formatEuro(googleAds.cpa) },
+          { label: 'CTR',        value: `${formatNumber(googleAds.ctr, 2)}%` },
         ]}
       />
       <PlatformCard
-        name="Organisch"
-        dotColor="#22c55e"
-        delay={400}
+        name="Organisch" dotColor="#16a34a" delay={320}
         badge="Geen kosten"
-        badgeStyle={{
-          background: 'transparent',
-          color: 'var(--color-success)',
-          border: '1.5px dashed var(--color-success)',
-        }}
-        cardStyle={{ borderStyle: 'dashed' }}
+        badgeStyle={{ background: '#dcfce7', color: '#16a34a' }}
         metrics={[
-          { label: 'Sessies', value: formatNumber(analytics.sessions) },
-          { label: 'Conversies', value: formatNumber(analytics.conversions) },
-          { label: 'Conversieratio', value: `${formatNumber(analytics.conversionRate, 2)}%` },
+          { label: 'Sessies',               value: formatNumber(analytics.sessions) },
+          { label: 'Conversies',            value: formatNumber(analytics.conversions) },
+          { label: 'Conversieratio',        value: `${formatNumber(analytics.conversionRate, 2)}%` },
           { label: 'Organische gebruikers', value: formatNumber(analytics.organicUsers) },
         ]}
       />

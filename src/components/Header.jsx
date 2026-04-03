@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RefreshCw, Download, Clock } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -10,8 +10,8 @@ function getGreeting() {
 
 function getDutchMonth() {
   const months = [
-    'januari', 'februari', 'maart', 'april', 'mei', 'juni',
-    'juli', 'augustus', 'september', 'oktober', 'november', 'december',
+    'januari','februari','maart','april','mei','juni',
+    'juli','augustus','september','oktober','november','december',
   ];
   const d = new Date();
   return `${months[d.getMonth()]} ${d.getFullYear()}`;
@@ -32,74 +32,54 @@ export default function Header({ lastUpdated, onRefetch, isLoading, period, onPe
 
   return (
     <header
+      className="animate-in animate-delay-0"
       style={{
         background: '#fff',
-        borderBottom: '1px solid var(--color-border)',
-        padding: '20px 32px',
-        position: 'sticky',
-        top: 0,
-        zIndex: 20,
+        borderBottom: '1px solid #f0f0ef',
+        padding: '24px 32px 20px',
       }}
-      className="animate-in animate-delay-0"
     >
-      <div className="flex items-start justify-between gap-4">
-        {/* Left — greeting + title */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16 }}>
+        {/* Left */}
         <div>
-          <p style={{ color: 'var(--color-muted)', fontSize: 13, marginBottom: 2 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: '#111827', lineHeight: 1.15, marginBottom: 4 }}>
             {getGreeting()}, Zitcomfort 👋
-          </p>
-          <h1
-            className="font-display"
-            style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-navy)', lineHeight: 1.2 }}
-          >
-            Marketing Insights Dashboard
           </h1>
-          <p style={{ color: 'var(--color-muted)', fontSize: 13, marginTop: 3 }}>
-            Zitcomfort · Prestatierapport — {getDutchMonth()}
+          <p style={{ color: '#9ca3af', fontSize: 13 }}>
+            Prestatierapport — {getDutchMonth()}
           </p>
         </div>
 
-        {/* Right — controls */}
-        <div className="flex items-center gap-3 flex-shrink-0">
-          {/* Period toggle */}
-          <div
-            style={{
-              display: 'flex',
-              background: '#f3f4f6',
-              borderRadius: 8,
-              padding: 3,
-            }}
-          >
+        {/* Right */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          {/* Last updated */}
+          <span style={{ fontSize: 12, color: '#9ca3af' }}>
+            Bijgewerkt: {formatTime(lastUpdated)}
+          </span>
+
+          {/* Period toggle — 7D / 30D style */}
+          <div style={{ display: 'flex', gap: 4 }}>
             {['Week', 'Maand'].map((p) => (
               <button
                 key={p}
                 onClick={() => onPeriodChange(p)}
                 style={{
-                  padding: '5px 14px',
-                  borderRadius: 6,
-                  border: 'none',
+                  padding: '6px 14px',
+                  borderRadius: 7,
+                  border: '1px solid',
+                  borderColor: period === p ? '#1a1f4b' : '#e5e7eb',
                   cursor: 'pointer',
                   fontSize: 12,
-                  fontWeight: 500,
+                  fontWeight: period === p ? 600 : 400,
                   fontFamily: 'inherit',
                   transition: 'all 0.15s ease',
-                  background: period === p ? '#fff' : 'transparent',
-                  color: period === p ? 'var(--color-navy)' : 'var(--color-muted)',
-                  boxShadow: period === p ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  background: period === p ? '#1a1f4b' : '#fff',
+                  color: period === p ? '#fff' : '#6b7280',
                 }}
               >
                 {p}
               </button>
             ))}
-          </div>
-
-          {/* Last updated */}
-          <div
-            className="flex items-center gap-1.5"
-            style={{ color: 'var(--color-muted)', fontSize: 12 }}
-          >
-            <Clock size={13} />
-            <span>Laatst bijgewerkt: {formatTime(lastUpdated)}</span>
           </div>
 
           {/* Refresh */}
@@ -108,16 +88,13 @@ export default function Header({ lastUpdated, onRefetch, isLoading, period, onPe
             disabled={isLoading}
             title="Vernieuwen"
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 8,
-              border: '1px solid var(--color-border)',
+              width: 34, height: 34,
+              borderRadius: 7,
+              border: '1px solid #e5e7eb',
               background: '#fff',
               cursor: isLoading ? 'default' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-muted)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#6b7280',
               transition: 'background 0.15s ease',
             }}
             onMouseEnter={e => { if (!isLoading) e.currentTarget.style.background = '#f9fafb'; }}
@@ -130,22 +107,19 @@ export default function Header({ lastUpdated, onRefetch, isLoading, period, onPe
           <button
             onClick={handleExport}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 7,
+              display: 'flex', alignItems: 'center', gap: 6,
               padding: '7px 16px',
-              borderRadius: 8,
+              borderRadius: 7,
               border: 'none',
-              background: 'var(--color-navy)',
+              background: '#1a1f4b',
               color: '#fff',
-              fontSize: 12,
-              fontWeight: 600,
+              fontSize: 12, fontWeight: 600,
               fontFamily: 'inherit',
               cursor: 'pointer',
               transition: 'background 0.15s ease',
             }}
             onMouseEnter={e => e.currentTarget.style.background = '#252b5e'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--color-navy)'}
+            onMouseLeave={e => e.currentTarget.style.background = '#1a1f4b'}
           >
             <Download size={13} />
             Exporteren
@@ -153,24 +127,15 @@ export default function Header({ lastUpdated, onRefetch, isLoading, period, onPe
         </div>
       </div>
 
-      {/* Toast */}
       {toast && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            background: '#111827',
-            color: '#fff',
-            padding: '10px 18px',
-            borderRadius: 10,
-            fontSize: 13,
-            fontWeight: 500,
-            zIndex: 100,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-            animation: 'fadeInUp 0.3s ease',
-          }}
-        >
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24,
+          background: '#111827', color: '#fff',
+          padding: '10px 18px', borderRadius: 9,
+          fontSize: 13, fontWeight: 500, zIndex: 100,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
+          animation: 'fadeInUp 0.3s ease',
+        }}>
           Exportfunctie komt binnenkort beschikbaar
         </div>
       )}

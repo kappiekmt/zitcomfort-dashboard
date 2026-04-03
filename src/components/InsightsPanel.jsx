@@ -108,11 +108,12 @@ export default function InsightsPanel({ data }) {
     <div
       className="animate-in animate-delay-5"
       style={{
-        background: 'rgba(240,165,0,0.04)',
-        borderRadius: 12,
-        border: '1px solid rgba(240,165,0,0.2)',
-        borderLeft: '4px solid var(--color-gold)',
+        background: '#fff',
+        borderRadius: 10,
+        border: '1px solid #e5e7eb',
+        borderLeft: '3px solid #f0a500',
         padding: '20px 24px',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
       }}
     >
       <h2
